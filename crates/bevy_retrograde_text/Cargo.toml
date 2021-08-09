@@ -18,11 +18,11 @@ categories = [
 ]
 
 [dependencies]
-bevy = "0.5"
-bevy_retrograde_core = { version = "0.2", path = "../bevy_retrograde_core" }
+bevy = { git = "https://github.com/katharostech/bevy", branch = "bevy_retrograde_0.3", default-features = false }
 bevy_retrograde_macros = { version = "0.2", path = "../bevy_retrograde_macros" }
 peg = "0.7.0"
 unicode-linebreak = "0.1.1"
+image = "0.23.0"
 
 thiserror = "1.0.24"
 anyhow = "1.0.40"

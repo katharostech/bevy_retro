@@ -1,5 +1,4 @@
-use bevy::prelude::*;
-use bevy_retrograde_core::prelude::*;
+use bevy::{prelude::*, sprite2::Sprite};
 
 use crate::prelude::*;
 
@@ -28,7 +27,7 @@ impl Default for Text {
     fn default() -> Self {
         Self {
             text: String::new(),
-            color: Color::new(1., 1., 1., 1.),
+            color: Color::WHITE,
         }
     }
 }

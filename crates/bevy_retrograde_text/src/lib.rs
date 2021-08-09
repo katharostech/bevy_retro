@@ -31,7 +31,7 @@ pub struct RetroTextStage;
 pub struct RetroTextPlugin;
 
 impl Plugin for RetroTextPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app
             // use sparce storage for marker components
             .register_component(ComponentDescriptor::new::<TextNeedsUpdate>(

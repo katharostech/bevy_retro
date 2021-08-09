@@ -1,6 +1,9 @@
 use bevy::{
     diagnostic::{Diagnostics, FrameTimeDiagnosticsPlugin},
     prelude::*,
+    render2::camera::{
+        DepthCalculation, OrthographicCameraBundle, OrthographicProjection, ScalingMode,
+    },
 };
 use bevy_retrograde::prelude::*;
 
@@ -9,7 +12,7 @@ use bevy_retrograde::prelude::*;
 struct GameStage;
 
 fn main() {
-    App::build()
+    App::new()
         .insert_resource(WindowDescriptor {
             title: "Bevy Retrograde Text".into(),
             ..Default::default()
@@ -25,12 +28,19 @@ struct Fps;
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     // Spawn the camera
-    commands.spawn().insert_bundle(RetroCameraBundle {
-        camera: RetroCamera {
-            size: CameraSize::FixedHeight(300),
+    const CAMERA_HEIGHT: f32 = 300.0; // The camera height in retro-resolution pixels
+    commands.spawn_bundle(OrthographicCameraBundle {
+        orthographic_projection: OrthographicProjection {
+            // Note that the scale is half of the height
+            scale: CAMERA_HEIGHT / 2.0,
+            // This makes sure that the in-game height of the camera stays the same, while the width
+            // adjusts automatically based on the aspect ratio
+            scaling_mode: ScalingMode::FixedVertical,
+            // This is the depth mode that should be used for 2D
+            depth_calculation: DepthCalculation::ZDifference,
             ..Default::default()
         },
-        ..Default::default()
+        ..OrthographicCameraBundle::new_2d()
     });
 
     // Bevy Retrograde reads the BDF font format
@@ -56,7 +66,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
         .spawn_bundle(TextBundle {
             text: Text {
                 text: long_text.into(),
-                color: Color::new(1., 0., 0., 1.),
+                color: Color::RED,
             },
             font: font.clone(),
             ..Default::default()
@@ -75,10 +85,6 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
             text: "- The Sign Painter".into(),
             ..Default::default()
         },
-        sprite: Sprite {
-            centered: false,
-            ..Default::default()
-        },
         font: font.clone(),
         transform: Transform::from_xyz(0., 110., 0.),
         ..Default::default()
@@ -89,10 +95,6 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
         .spawn_bundle(TextBundle {
             text: Text {
                 text: "FPS:".into(),
-                ..Default::default()
-            },
-            sprite: Sprite {
-                centered: false,
                 ..Default::default()
             },
             font: font.clone(),

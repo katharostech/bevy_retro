@@ -1,8 +1,9 @@
 use bdf::Glyph;
-use bevy_retrograde_core::{
-    image::{GenericImage, Rgba, RgbaImage},
-    prelude::*,
+use bevy::render2::{
+    render_resource::{Extent3d, TextureDimension, TextureFormat},
+    texture::Image,
 };
+use image::{GenericImage, Rgba, RgbaImage};
 use unicode_linebreak::BreakOpportunity;
 
 use crate::*;
@@ -57,7 +58,16 @@ pub(crate) fn font_rendering(
         let image = rasterize_text_block(text, font, text_block);
 
         // Update or add the new image handle to the entity
-        let new_image_handle = image_assets.add(Image(image));
+        let new_image_handle = image_assets.add(Image::new(
+            Extent3d {
+                width: image.width(),
+                height: image.height(),
+                ..Default::default()
+            },
+            TextureDimension::D2,
+            image.into_raw(),
+            TextureFormat::Rgba8UnormSrgb,
+        ));
         if let Some(mut handle) = image_handle {
             image_assets.remove(&*handle);
             *handle = new_image_handle;
@@ -75,7 +85,7 @@ pub fn rasterize_text_block(
     text: &Text,
     font: &Font,
     text_block: Option<&TextBlock>,
-) -> bevy_retrograde_core::image::ImageBuffer<Rgba<u8>, Vec<u8>> {
+) -> image::ImageBuffer<Rgba<u8>, Vec<u8>> {
     let default_glyph = font.glyphs.get(&' ');
     let font_bounds = &font.bounds;
 
@@ -179,7 +189,7 @@ pub fn rasterize_text_block(
         .unwrap_or(image_width);
 
     // Create a new image the size of the text box
-    let mut image: RgbaImage = RgbaImage::new(image_width, image_height);
+    let mut image = RgbaImage::new(image_width, image_height);
 
     // Calculate the y offset to account for vertical alignment
     let y_offset = text_block
@@ -242,11 +252,11 @@ pub fn rasterize_text_block(
                         );
 
                         *pixel = Rgba([
-                            (255. * text.color.r).round() as u8,
-                            (255. * text.color.g).round() as u8,
-                            (255. * text.color.b).round() as u8,
+                            (255. * text.color.r()).round() as u8,
+                            (255. * text.color.g()).round() as u8,
+                            (255. * text.color.b()).round() as u8,
                             if glyph.bitmap.get(x, y) {
-                                (255. * text.color.a).round() as u8
+                                (255. * text.color.a()).round() as u8
                             } else {
                                 0
                             },
