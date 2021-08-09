@@ -23,9 +23,8 @@ default = []
 # debug = ["raqote"]
 
 [dependencies]
-bevy = "0.5"
-bevy_retrograde_core = { version = "0.2", path = "../bevy_retrograde_core" }
-heron = { version = "0.11.0", features = ["2d"], default-features = false }
+bevy = { git = "https://github.com/katharostech/bevy", branch = "bevy_retrograde_0.3", default-features = false }
+heron = { git = "https://github.com/katharostech/heron", branch = "bevy-0.6", features = ["2d"], default-features = false }
 density-mesh-core = "1.5.0"
 density-mesh-image = "1.5.0"
 image = "0.23.14"

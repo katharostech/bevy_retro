@@ -1,9 +1,9 @@
 //! Bevy Retrograde physics plugin
 
+use bevy::render2::texture::Image;
 use bevy::{ecs::component::ComponentDescriptor, prelude::*};
 #[cfg(feature = "debug")]
 use bevy_retrograde_core::prelude::AppBuilderRenderHookExt;
-use bevy_retrograde_core::prelude::Image;
 use density_mesh_core::prelude::GenerateDensityMeshSettings;
 use density_mesh_core::prelude::PointsSeparation;
 
@@ -17,6 +17,7 @@ pub mod prelude {
 
 #[cfg(feature = "debug")]
 mod render_hook;
+use image::ImageBuffer;
 #[cfg(feature = "debug")]
 use render_hook::PhysicsDebugRenderHook;
 
@@ -40,7 +41,7 @@ impl Default for PhysicsDebugRendering {
 }
 
 impl Plugin for RetroPhysicsPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app.add_plugin(PhysicsPlugin::default());
 
         #[cfg(feature = "debug")]
@@ -50,7 +51,7 @@ impl Plugin for RetroPhysicsPlugin {
         app.register_component(ComponentDescriptor::new::<TesselatedColliderHasLoaded>(
             bevy::ecs::component::StorageType::SparseSet,
         ))
-        .add_system_to_stage(CoreStage::PostUpdate, generate_colliders.system());
+        .add_system_to_stage(CoreStage::PostUpdate, generate_colliders);
     }
 }
 
@@ -98,7 +99,7 @@ pub fn create_convex_collider(
         .map(|point| {
             Vec3::new(
                 (point.x - width as f32 / 2.0) + 0.5,
-                (point.y - height as f32 / 2.0) + 0.5,
+                -(point.y - height as f32 / 2.0) - 0.5,
                 0.,
             )
         })
@@ -164,7 +165,7 @@ impl Default for TesselatedColliderConfig {
 /// automatically by tesselating [`Image`] collision shape based on it's alpha channel
 #[derive(Default)]
 pub struct TesselatedCollider {
-    pub image: Handle<Image>,
+    pub texture: Handle<Image>,
     pub tesselator_config: TesselatedColliderConfig,
 }
 
@@ -176,14 +177,21 @@ fn generate_colliders(
     // TODO: Hot reload collision shape changes
     for (ent, tesselated_collider) in pending_colliders.iter() {
         // Get the collider image
-        let image = if let Some(image) = image_assets.get(&tesselated_collider.image) {
+        let image = if let Some(image) = image_assets.get(&tesselated_collider.texture) {
             image
         } else {
             continue;
         };
 
         let shape = create_convex_collider(
-            DynamicImage::ImageRgba8(image.0.clone()),
+            DynamicImage::ImageRgba8(
+                ImageBuffer::from_vec(
+                    image.texture_descriptor.size.width,
+                    image.texture_descriptor.size.height,
+                    image.data.clone(),
+                )
+                .unwrap(),
+            ),
             &tesselated_collider.tesselator_config,
         )
         .expect("Could not generate collision shape from image");

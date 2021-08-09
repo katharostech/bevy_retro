@@ -1,20 +1,21 @@
-use bevy::{core::FixedTimestep, prelude::*};
+use bevy::{
+    prelude::*,
+    render2::camera::{
+        DepthCalculation, OrthographicCameraBundle, OrthographicProjection, ScalingMode,
+    },
+    sprite2::PipelinedSpriteBundle,
+};
 use bevy_retrograde::prelude::*;
 
 fn main() {
-    App::build()
+    App::new()
         .insert_resource(WindowDescriptor {
             title: "Bevy Retrograde Physics Character".into(),
             ..Default::default()
         })
         .add_plugins(RetroPlugins)
         .add_startup_system(setup.system())
-        .add_stage(
-            "game_stage",
-            SystemStage::parallel()
-                .with_run_criteria(FixedTimestep::step(0.015))
-                .with_system(move_player.system()),
-        )
+        .add_system(move_player)
         .run();
 }
 
@@ -22,14 +23,16 @@ struct Player;
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     // Spawn the camera
-    commands.spawn_bundle(RetroCameraBundle {
-        camera: RetroCamera {
-            size: CameraSize::FixedHeight(100),
-            background_color: Color::new(0.2, 0.2, 0.2, 1.0),
+    const CAMERA_HEIGHT: f32 = 150.0;
+    commands.spawn_bundle(OrthographicCameraBundle {
+        orthographic_projection: OrthographicProjection {
+            scale: CAMERA_HEIGHT / 2.0,
+            scaling_mode: ScalingMode::FixedVertical,
+            depth_calculation: DepthCalculation::ZDifference,
             ..Default::default()
         },
-        transform: Transform::from_xyz(0., -50., 0.),
-        ..Default::default()
+        transform: Transform::from_xyz(0., 75., 0.),
+        ..OrthographicCameraBundle::new_2d()
     });
 
     // Load our images
@@ -40,15 +43,15 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     // Spawn a collider block that will just sit there and be an obstacle
     commands
         // First we spawn a sprite bundle like normal
-        .spawn_bundle(SpriteBundle {
-            image: block.clone(),
+        .spawn_bundle(PipelinedSpriteBundle {
+            texture: block.clone(),
             ..Default::default()
         })
         // Then we add a tesselated collider component. This will create a convex collision shape
         // from the provided image automatically.
         .insert(TesselatedCollider {
             // We want to use the same block we use for the visual for the collider shape
-            image: block.clone(),
+            texture: block.clone(),
             ..Default::default()
         })
         // Make it a static body
@@ -56,33 +59,33 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 
     // Spawn a couple more blocks at different positions
     commands
-        .spawn_bundle(SpriteBundle {
-            image: block.clone(),
-            transform: Transform::from_xyz(200., -24., 0.),
+        .spawn_bundle(PipelinedSpriteBundle {
+            texture: block.clone(),
+            transform: Transform::from_xyz(200., 24., 0.),
             ..Default::default()
         })
         .insert(TesselatedCollider {
-            image: block.clone(),
+            texture: block.clone(),
             ..Default::default()
         })
         .insert(RigidBody::Static);
     commands
-        .spawn_bundle(SpriteBundle {
-            image: block.clone(),
-            transform: Transform::from_xyz(-200., -24., 0.),
+        .spawn_bundle(PipelinedSpriteBundle {
+            texture: block.clone(),
+            transform: Transform::from_xyz(-200., 24., 0.),
             ..Default::default()
         })
         .insert(TesselatedCollider {
-            image: block.clone(),
+            texture: block.clone(),
             ..Default::default()
         })
         .insert(RigidBody::Static);
 
     // Spawn a triangle obstacle
     commands
-        .spawn_bundle(SpriteBundle {
-            image: triangle.clone(),
-            transform: Transform::from_xyz(-50., -60., 0.),
+        .spawn_bundle(PipelinedSpriteBundle {
+            texture: triangle.clone(),
+            transform: Transform::from_xyz(-50., 60., 0.),
             ..Default::default()
         })
         .insert(RigidBody::Static)
@@ -91,7 +94,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                 Transform::default(),
                 GlobalTransform::default(),
                 TesselatedCollider {
-                    image: triangle,
+                    texture: triangle,
                     // For this obstacle we provide a custom configuration for the tesselator
                     tesselator_config: TesselatedColliderConfig {
                         // This vertice separation value sets the closest that any two tesselated vertices
@@ -113,17 +116,13 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 
     // Spawn the player
     commands
-        .spawn_bundle(SpriteBundle {
-            image: red_radish.clone(),
-            sprite: Sprite {
-                pixel_perfect: false,
-                ..Default::default()
-            },
-            transform: Transform::from_xyz(0., -50., 0.),
+        .spawn_bundle(PipelinedSpriteBundle {
+            texture: red_radish.clone(),
+            transform: Transform::from_xyz(0., 50., 0.),
             ..Default::default()
         })
         .insert(TesselatedCollider {
-            image: red_radish.clone(),
+            texture: red_radish.clone(),
             tesselator_config: TesselatedColliderConfig {
                 // We want the collision shape for the player to be highly accurate
                 vertice_separation: 0.,
@@ -146,26 +145,30 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 }
 
 /// Set's the player speed based on input from the keyboard arrow keys
-fn move_player(keyboard_input: Res<Input<KeyCode>>, mut query: Query<&mut Velocity, With<Player>>) {
+fn move_player(
+    keyboard_input: Res<Input<KeyCode>>,
+    mut query: Query<&mut Velocity, With<Player>>,
+    time: Res<Time>,
+) {
     for mut velocity in query.iter_mut() {
-        const SPEED: f32 = 30.;
+        let speed: f32 = 10.0 * time.delta().as_millis() as f32;
 
         let mut direction = Vec3::new(0., 0., 0.);
 
         if keyboard_input.pressed(KeyCode::Left) {
-            direction += Vec3::new(-SPEED, 0., 0.);
+            direction += Vec3::new(-speed, 0., 0.);
         }
 
         if keyboard_input.pressed(KeyCode::Right) {
-            direction += Vec3::new(SPEED, 0., 0.);
+            direction += Vec3::new(speed, 0., 0.);
         }
 
         if keyboard_input.pressed(KeyCode::Up) {
-            direction += Vec3::new(0., -SPEED, 0.);
+            direction += Vec3::new(0., speed, 0.);
         }
 
         if keyboard_input.pressed(KeyCode::Down) {
-            direction += Vec3::new(0., SPEED, 0.);
+            direction += Vec3::new(0., -speed, 0.);
         }
 
         *velocity = Velocity::from_linear(direction);

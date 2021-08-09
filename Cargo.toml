@@ -38,7 +38,7 @@ default = [
     "audio",
     # "text",
     # "ui",
-    # "physics",
+    "physics",
     "bevy/png",
     "bevy/x11",
 ]
@@ -46,7 +46,7 @@ audio = ["bevy_retrograde_audio"]
 # text = ["bevy_retrograde_text"]
 # ui = ["bevy_retrograde_ui"]
 # epaint = ["bevy_retrograde_epaint"]
-# physics = ["bevy_retrograde_physics"]
+physics = ["bevy_retrograde_physics"]
 
 # ldtk = ["bevy_retrograde_ldtk"]
 
@@ -67,8 +67,7 @@ bevy_retrograde_audio = { version = "0.2", path = "crates/bevy_retrograde_audio"
 # bevy_retrograde_ldtk = { version = "0.2", path = "crates/bevy_retrograde_ldtk", optional = true }
 # bevy_retrograde_text = { version = "0.2", path = "crates/bevy_retrograde_text", optional = true }
 # bevy_retrograde_ui = { version = "0.2", path = "crates/bevy_retrograde_ui", optional = true }
-# bevy_retrograde_epaint = { version = "0.2", path = "crates/bevy_retrograde_epaint", optional = true }
-# bevy_retrograde_physics = { version = "0.2", path = "crates/bevy_retrograde_physics", optional = true }
+bevy_retrograde_physics = { version = "0.2", path = "crates/bevy_retrograde_physics", optional = true }
 
 [dev-dependencies]
 hex = "0.4.3"
