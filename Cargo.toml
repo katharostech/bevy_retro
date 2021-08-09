@@ -35,14 +35,14 @@ exclude = [
 
 [features]
 default = [
-    # "audio",
+    "audio",
     # "text",
     # "ui",
     # "physics",
     "bevy/png",
     "bevy/x11",
 ]
-# audio = ["bevy_retrograde_audio"]
+audio = ["bevy_retrograde_audio"]
 # text = ["bevy_retrograde_text"]
 # ui = ["bevy_retrograde_ui"]
 # epaint = ["bevy_retrograde_epaint"]
@@ -63,7 +63,7 @@ features = [
 
 [dependencies]
 bevy_retrograde_macros = { version = "0.2", path = "crates/bevy_retrograde_macros" }
-# bevy_retrograde_audio = { version = "0.2", path = "crates/bevy_retrograde_audio", optional = true }
+bevy_retrograde_audio = { version = "0.2", path = "crates/bevy_retrograde_audio", optional = true }
 # bevy_retrograde_ldtk = { version = "0.2", path = "crates/bevy_retrograde_ldtk", optional = true }
 # bevy_retrograde_text = { version = "0.2", path = "crates/bevy_retrograde_text", optional = true }
 # bevy_retrograde_ui = { version = "0.2", path = "crates/bevy_retrograde_ui", optional = true }

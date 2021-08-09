@@ -6,7 +6,7 @@ use bevy::{
 };
 use kira::sound::{handle::SoundHandle as KiraSoundHandle, Sound as KiraSound};
 
-pub(crate) fn add_assets(app: &mut AppBuilder) {
+pub(crate) fn add_assets(app: &mut App) {
     app.add_asset::<SoundData>()
         .add_asset_loader(SoundDataLoader);
 }

@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_retrograde::prelude::*;
 
 fn main() {
-    App::build()
+    App::new()
         .insert_resource(WindowDescriptor {
             title: "Bevy Retrograde Audio".into(),
             ..Default::default()

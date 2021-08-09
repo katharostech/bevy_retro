@@ -28,7 +28,7 @@ ogg = ["kira/ogg"]
 wav = ["kira/wav"]
 
 [dependencies]
-bevy = "0.5"
+bevy = { git = "https://github.com/katharostech/bevy", branch = "bevy_retrograde_0.3", default-features = false }
 anyhow = "1.0.37"
 thiserror = "1.0.23"
 kira = { version = "0.5.2", default-features = false }

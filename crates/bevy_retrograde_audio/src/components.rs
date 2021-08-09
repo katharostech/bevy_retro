@@ -12,11 +12,11 @@ pub use kira::instance::{
 
 /// Bevy resource for controlling audio playback
 #[derive(SystemParam)]
-pub struct SoundController<'a> {
-    sound_event_writer: EventWriter<'a, SoundEvent>,
+pub struct SoundController<'s, 'w> {
+    sound_event_writer: EventWriter<'s, 'w, SoundEvent>,
 }
 
-impl<'a> SoundController<'a> {
+impl<'s, 'w> SoundController<'s, 'w> {
     /// Create a new sound that can then be played, paused, resumed, or stopped using the other functions on [`SoundController`]
     pub fn create_sound(&mut self, sound_data: &Handle<SoundData>) -> Sound {
         // Create a sound handle

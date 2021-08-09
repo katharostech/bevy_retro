@@ -26,7 +26,7 @@ pub(crate) use systems::*;
 pub struct RetroAudioPlugin;
 
 impl Plugin for RetroAudioPlugin {
-    fn build(&self, app: &mut AppBuilder) {
+    fn build(&self, app: &mut App) {
         app
             // Add audio manager resource
             .insert_non_send_resource(AudioManager::default())

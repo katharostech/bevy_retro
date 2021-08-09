@@ -11,7 +11,7 @@ use super::*;
 struct AudioStage;
 
 /// Add the Ldtk map systems to the app builder
-pub(crate) fn add_systems(app: &mut AppBuilder) {
+pub(crate) fn add_systems(app: &mut App) {
     app.add_stage_after(
         CoreStage::Last,
         AudioStage,
