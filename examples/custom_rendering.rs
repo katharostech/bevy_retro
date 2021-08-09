@@ -43,7 +43,7 @@ fn main() {
 /// In our setup function we will spawn a triangle
 fn setup(mut commands: Commands) {
     // Spawn a camera
-    commands.spawn().insert_bundle(CameraBundle::default());
+    commands.spawn().insert_bundle(RetroCameraBundle::default());
 
     // Spawn a triangle
     commands.spawn().insert_bundle((

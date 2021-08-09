@@ -27,8 +27,8 @@ struct Map;
 
 fn setup(mut commands: Commands, mut ui_tree: ResMut<UiTree>, asset_server: Res<AssetServer>) {
     // Spawn the camera
-    commands.spawn_bundle(CameraBundle {
-        camera: Camera {
+    commands.spawn_bundle(RetroCameraBundle {
+        camera: RetroCamera {
             size: CameraSize::FixedHeight(200),
             background_color: Color::new(0.09, 0.1, 0.22, 1.),
             ..Default::default()

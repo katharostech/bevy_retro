@@ -25,8 +25,8 @@ struct Fps;
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     // Spawn the camera
-    commands.spawn().insert_bundle(CameraBundle {
-        camera: Camera {
+    commands.spawn().insert_bundle(RetroCameraBundle {
+        camera: RetroCamera {
             size: CameraSize::FixedHeight(300),
             ..Default::default()
         },

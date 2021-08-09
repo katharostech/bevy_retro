@@ -31,8 +31,8 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.insert_resource(Gravity::from(Vec3::new(0., 9.8 * 16., 0.)));
 
     // Spawn the camera
-    commands.spawn_bundle(CameraBundle {
-        camera: Camera {
+    commands.spawn_bundle(RetroCameraBundle {
+        camera: RetroCamera {
             size: CameraSize::FixedHeight(160),
             background_color: Color::new(0.2, 0.2, 0.2, 1.0),
             ..Default::default()

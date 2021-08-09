@@ -30,8 +30,8 @@ struct Diamond;
 
 fn setup(mut commands: Commands) {
     // Spawn the camera
-    commands.spawn_bundle(CameraBundle {
-        camera: Camera {
+    commands.spawn_bundle(RetroCameraBundle {
+        camera: RetroCamera {
             size: CameraSize::FixedHeight(100),
             background_color: Color::new(0.2, 0.2, 0.2, 1.0),
             ..Default::default()

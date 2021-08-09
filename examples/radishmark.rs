@@ -52,8 +52,8 @@ fn main() {
 
 fn setup(mut commands: Commands) {
     // Spawn the camera
-    commands.spawn().insert_bundle(CameraBundle {
-        camera: Camera {
+    commands.spawn().insert_bundle(RetroCameraBundle {
+        camera: RetroCamera {
             size: CameraSize::LetterBoxed {
                 width: GAME_WIDTH as u32,
                 height: GAME_HEIGHT as u32,

@@ -31,8 +31,8 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     let blue_radish_image = asset_server.load("blueRadish.png");
 
     // Spawn the camera
-    commands.spawn().insert_bundle(CameraBundle {
-        camera: Camera {
+    commands.spawn().insert_bundle(RetroCameraBundle {
+        camera: RetroCamera {
             // Set our camera to have a fixed height and an auto-resized width
             size: CameraSize::FixedHeight(100),
             background_color: Color::new(0.2, 0.2, 0.2, 1.0),

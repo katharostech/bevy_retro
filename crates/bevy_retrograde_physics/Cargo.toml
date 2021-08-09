@@ -23,7 +23,7 @@ default = []
 # debug = ["raqote"]
 
 [dependencies]
-bevy = { version = "0.5", default-features = false }
+bevy = "0.5"
 bevy_retrograde_core = { version = "0.2", path = "../bevy_retrograde_core" }
 heron = { version = "0.11.0", features = ["2d"], default-features = false }
 density-mesh-core = "1.5.0"

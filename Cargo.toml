@@ -3,6 +3,7 @@ name = "bevy_retrograde"
 version = "0.2.0"
 authors = ["Katharos Technology LLC."]
 edition = "2018"
+resolver = "2"
 
 license-file = "LICENSE.md"
 readme = "README.md"
@@ -23,32 +24,51 @@ exclude = [
 
 [workspace]
 members = ["crates/*"]
+exclude = [
+    "crates/bevy_retrograde_physics",
+    "crates/bevy_retrograde_epaint",
+    "crates/bevy_retrograde_ldtk",
+    "crates/bevy_retrograde_text",
+    "crates/bevy_retrograde_ui",
+    "crates/bevy_retrograde_audio",
+]
 
 [features]
 default = [
-    "audio",
-    "text",
-    "ui",
-    "physics",
+    # "audio",
+    # "text",
+    # "ui",
+    # "physics",
+    "bevy/png",
+    "bevy/x11",
 ]
-audio = ["bevy_retrograde_audio"]
-text = ["bevy_retrograde_text"]
-ui = ["bevy_retrograde_ui"]
-epaint = ["bevy_retrograde_epaint"]
-physics = ["bevy_retrograde_physics"]
+# audio = ["bevy_retrograde_audio"]
+# text = ["bevy_retrograde_text"]
+# ui = ["bevy_retrograde_ui"]
+# epaint = ["bevy_retrograde_epaint"]
+# physics = ["bevy_retrograde_physics"]
 
-ldtk = ["bevy_retrograde_ldtk"]
+# ldtk = ["bevy_retrograde_ldtk"]
+
+[dependencies.bevy]
+git = "https://github.com/katharostech/bevy"
+branch = "bevy_retrograde_0.3"
+default-features = false
+features = [
+    "bevy_core_pipeline",
+    "bevy_render2",
+    "bevy_sprite2",
+    "bevy_winit",
+]
 
 [dependencies]
-bevy = { version = "0.5", default-features = false }
 bevy_retrograde_macros = { version = "0.2", path = "crates/bevy_retrograde_macros" }
-bevy_retrograde_core = { version = "0.2", path = "crates/bevy_retrograde_core" }
-bevy_retrograde_audio = { version = "0.2", path = "crates/bevy_retrograde_audio", optional = true }
-bevy_retrograde_ldtk = { version = "0.2", path = "crates/bevy_retrograde_ldtk", optional = true }
-bevy_retrograde_text = { version = "0.2", path = "crates/bevy_retrograde_text", optional = true }
-bevy_retrograde_ui = { version = "0.2", path = "crates/bevy_retrograde_ui", optional = true }
-bevy_retrograde_epaint = { version = "0.2", path = "crates/bevy_retrograde_epaint", optional = true }
-bevy_retrograde_physics = { version = "0.2", path = "crates/bevy_retrograde_physics", optional = true }
+# bevy_retrograde_audio = { version = "0.2", path = "crates/bevy_retrograde_audio", optional = true }
+# bevy_retrograde_ldtk = { version = "0.2", path = "crates/bevy_retrograde_ldtk", optional = true }
+# bevy_retrograde_text = { version = "0.2", path = "crates/bevy_retrograde_text", optional = true }
+# bevy_retrograde_ui = { version = "0.2", path = "crates/bevy_retrograde_ui", optional = true }
+# bevy_retrograde_epaint = { version = "0.2", path = "crates/bevy_retrograde_epaint", optional = true }
+# bevy_retrograde_physics = { version = "0.2", path = "crates/bevy_retrograde_physics", optional = true }
 
 [dev-dependencies]
 hex = "0.4.3"
@@ -63,14 +83,14 @@ debug = 0
 [[example]]
 name = "ldtk_map"
 path = "examples/ldtk_map.rs"
-required-features = ["ldtk"]
+# required-features = ["ldtk"]
 
 [[example]]
 name = "physics_map"
 path = "examples/physics_map.rs"
-required-features = ["ldtk"]
+# required-features = ["ldtk"]
 
 [[example]]
 name = "epaint"
 path = "examples/epaint.rs"
-required-features = ["epaint"]
+# required-features = ["epaint"]

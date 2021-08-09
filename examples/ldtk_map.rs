@@ -27,8 +27,8 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     asset_server.watch_for_changes().unwrap();
 
     // Spawn the camera
-    commands.spawn().insert_bundle(CameraBundle {
-        camera: Camera {
+    commands.spawn().insert_bundle(RetroCameraBundle {
+        camera: RetroCamera {
             size: CameraSize::FixedHeight(180),
             ..Default::default()
         },
@@ -48,7 +48,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 /// This system moves the camera so you can look around the map
 fn move_camera(
     keyboard_input: Res<Input<KeyCode>>,
-    mut query: Query<&mut Transform, With<Camera>>,
+    mut query: Query<&mut Transform, With<RetroCamera>>,
 ) {
     for mut transform in query.iter_mut() {
         const SPEED: f32 = 1.;
@@ -77,7 +77,7 @@ fn move_camera(
 
 /// This system sets the camera background color to the background color of the maps first level
 fn set_background_color(
-    mut cameras: Query<&mut Camera>,
+    mut cameras: Query<&mut RetroCamera>,
     maps: Query<&Handle<LdtkMap>>,
     ldtk_map_assets: Res<Assets<LdtkMap>>,
 ) {

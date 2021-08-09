@@ -27,7 +27,7 @@ struct SpriteAnimFrame(usize);
 fn setup(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    mut sprite_sheet_assets: ResMut<Assets<SpriteSheet>>,
+    mut sprite_sheet_assets: ResMut<Assets<RetroSpriteSheet>>,
 ) {
     // Spawn sprite
     commands
@@ -36,7 +36,7 @@ fn setup(
                 image: asset_server.load("redRadishSheet.png"),
                 ..Default::default()
             },
-            sprite_sheet: sprite_sheet_assets.add(SpriteSheet {
+            sprite_sheet: sprite_sheet_assets.add(RetroSpriteSheet {
                 grid_size: UVec2::splat(16),
                 tile_index: 4,
             }),
@@ -44,8 +44,8 @@ fn setup(
         .insert(SpriteAnimFrame(0));
 
     // Spawn camera
-    commands.spawn().insert_bundle(CameraBundle {
-        camera: Camera {
+    commands.spawn().insert_bundle(RetroCameraBundle {
+        camera: RetroCamera {
             size: CameraSize::FixedHeight(40),
             background_color: Color::new(0.2, 0.2, 0.2, 1.0),
             ..Default::default()
@@ -57,8 +57,8 @@ fn setup(
 fn animate_sprite(
     // Keep track if the frame number
     mut frame: Local<u8>,
-    mut query: Query<(&Handle<SpriteSheet>, &mut SpriteAnimFrame), With<Handle<Image>>>,
-    mut sprite_sheet_assets: ResMut<Assets<SpriteSheet>>,
+    mut query: Query<(&Handle<RetroSpriteSheet>, &mut SpriteAnimFrame), With<Handle<Image>>>,
+    mut sprite_sheet_assets: ResMut<Assets<RetroSpriteSheet>>,
 ) {
     // Increment frame number
     *frame = frame.wrapping_add(1);
